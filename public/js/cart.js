@@ -87,7 +87,7 @@ const Cart = {
              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect fill=%22%231c2030%22 width=%2264%22 height=%2264%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2224%22>🥬</text></svg>'" />
         <div class="cart-item__info">
           <div class="cart-item__name">${item.product.name}</div>
-          <div class="cart-item__price">$${item.product.price.toFixed(2)} / ${item.product.unit}</div>
+          <div class="cart-item__price">₹${item.product.price.toFixed(2)} / ${item.product.unit}</div>
           <div class="cart-item__actions">
             <button class="cart-item__qty-btn" onclick="Cart.updateQty('${item.product.id}', ${item.quantity - 1})">−</button>
             <span class="cart-item__qty">${item.quantity}</span>
@@ -95,26 +95,26 @@ const Cart = {
             <button class="cart-item__remove" onclick="Cart.remove('${item.product.id}')" aria-label="Remove item">🗑</button>
           </div>
         </div>
-        <div class="cart-item__total">$${item.itemTotal.toFixed(2)}</div>
+        <div class="cart-item__total">₹${item.itemTotal.toFixed(2)}</div>
       </div>
     `
       )
       .join("");
 
     // Update footer totals
-    document.getElementById("cart-subtotal").textContent = `$${data.subtotal.toFixed(2)}`;
-    document.getElementById("cart-tax").textContent = `$${data.tax.toFixed(2)}`;
+    document.getElementById("cart-subtotal").textContent = `₹${data.subtotal.toFixed(2)}`;
+    document.getElementById("cart-tax").textContent = `₹${data.tax.toFixed(2)}`;
 
     const deliveryEl = document.getElementById("cart-delivery");
     if (data.delivery === 0) {
       deliveryEl.textContent = "FREE";
       deliveryEl.className = "cart-delivery--free";
     } else {
-      deliveryEl.textContent = `$${data.delivery.toFixed(2)}`;
+      deliveryEl.textContent = `₹${data.delivery.toFixed(2)}`;
       deliveryEl.className = "";
     }
 
-    document.getElementById("cart-total").textContent = `$${data.total.toFixed(2)}`;
+    document.getElementById("cart-total").textContent = `₹${data.total.toFixed(2)}`;
   },
 
   async updateQty(productId, quantity) {
@@ -179,7 +179,7 @@ const Cart = {
 
     this.close(); // Close cart drawer first
 
-    document.getElementById("checkout-total").textContent = `$${this.data.total.toFixed(2)}`;
+    document.getElementById("checkout-total").textContent = `₹${this.data.total.toFixed(2)}`;
     document.getElementById("checkout-overlay").classList.add("modal-overlay--open");
     document.getElementById("checkout-modal").classList.add("modal--open");
     document.body.style.overflow = "hidden";
@@ -227,7 +227,7 @@ const Cart = {
     details.innerHTML = `
       <p><span>Order #</span><span>${order.orderNumber}</span></p>
       <p><span>Items</span><span>${order.items.length} product${order.items.length !== 1 ? "s" : ""}</span></p>
-      <p><span>Total</span><span style="color: var(--accent-light)">$${order.total.toFixed(2)}</span></p>
+      <p><span>Total</span><span style="color: var(--accent-light)">₹${order.total.toFixed(2)}</span></p>
       <p><span>Status</span><span style="color: var(--accent)">✓ ${order.status}</span></p>
     `;
 

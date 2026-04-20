@@ -28,7 +28,7 @@ router.get("/", (req, res) => {
   }
 
   const tax = Math.round(subtotal * 0.08 * 100) / 100;
-  const delivery = subtotal > 35 ? 0 : 4.99;
+  const delivery = subtotal > 500 ? 0 : 49;
   const total = Math.round((subtotal + tax + delivery) * 100) / 100;
 
   res.json({
@@ -39,7 +39,7 @@ router.get("/", (req, res) => {
       subtotal: Math.round(subtotal * 100) / 100,
       tax,
       delivery,
-      freeDeliveryThreshold: 35,
+      freeDeliveryThreshold: 500,
       total,
     },
   });

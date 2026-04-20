@@ -105,7 +105,7 @@ const Products = {
         <p class="product-card__description">${product.description}</p>
         <div class="product-card__footer">
           <div>
-            <span class="product-card__price">$${product.price.toFixed(2)}</span>
+            <span class="product-card__price">₹${product.price.toFixed(2)}</span>
             <span class="product-card__price-unit">/ ${product.unit}</span>
           </div>
           <button class="product-card__add-btn" id="add-btn-${product.id}" data-add-btn="${product.id}">
@@ -185,7 +185,7 @@ const Products = {
     document.getElementById("product-detail-category").textContent = product.category;
     document.getElementById("product-detail-name").textContent = product.name;
     document.getElementById("product-detail-description").textContent = product.description;
-    document.getElementById("product-detail-price").textContent = `$${product.price.toFixed(2)}`;
+    document.getElementById("product-detail-price").textContent = `₹${product.price.toFixed(2)}`;
     document.getElementById("product-detail-unit").textContent = product.unit;
     document.getElementById("product-detail-stock").textContent = `${product.stock} units`;
     document.getElementById("product-detail-qty").textContent = "1";
