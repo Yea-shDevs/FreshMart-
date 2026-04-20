@@ -1146,22 +1146,25 @@ input, select { font-family: var(--font); }
 }
 
 /* ── Responsive ─────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .hero__inner {
     grid-template-columns: 1fr;
     gap: 2rem;
     text-align: center;
+    min-height: auto;
   }
+  .hero { padding-bottom: 2.5rem; }
   .hero__title { font-size: 2.4rem; }
   .hero__subtitle { margin: 0 auto 1.5rem; }
   .hero__cta { justify-content: center; }
   .hero__stats { justify-content: center; }
-  .hero__visual { min-height: 200px; }
+  .hero__visual { display: none; }
 
   .products__grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}
 
+@media (max-width: 768px) {
   .cart-drawer { width: 100%; max-width: 100vw; }
-
   .header__search { max-width: 280px; }
 }
 
