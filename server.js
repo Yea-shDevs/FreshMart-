@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/artifacts", express.static("/Users/macos/.gemini/antigravity/brain/351ee610-ddc8-47d9-aa00-7db7d5dca524"));
 
 // ── API Routes ────────────────────────────────
 app.use("/api/products", productRoutes);
