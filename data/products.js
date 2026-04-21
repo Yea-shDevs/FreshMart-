@@ -626,7 +626,7 @@ const products = [
     price: 39,
     unit: "pack",
     category: "Beverages",
-    image: "https://image.pollinations.ai/prompt/bottle%20of%20purified%20mineral%20water%20photorealistic?width=800&height=800&nologo=true",
+    image: "/images/coconutwater.png",
     stock: 90,
     badge: "Natural",
   },
