@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FreshMart — Download & Save Images</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f23; color: #e0e0e0; padding: 30px; }
+    h1 { color: #4ecca3; margin-bottom: 5px; }
+    .subtitle { color: #888; margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
+    .item { background: #1a1a3e; border-radius: 10px; padding: 10px; text-align: center; transition: transform 0.2s; }
+    .item.done { border: 2px solid #4ecca3; }
+    .item.error { border: 2px solid #ff6b6b; }
+    .item img { width: 140px; height: 140px; object-fit: cover; border-radius: 8px; background: #252550; }
+    .item .name { margin-top: 6px; font-size: 12px; color: #4ecca3; font-weight: bold; }
+    .item .status { margin-top: 4px; font-size: 11px; min-height: 16px; }
+    .loading { color: #ffd700; }
+    .done { color: #4ecca3; }
+    .error { color: #ff6b6b; }
+    button { background: #4ecca3; color: #0f0f23; border: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; margin-right: 10px; }
+    button:hover { background: #3ba88a; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #progress { margin: 15px 0; font-size: 15px; padding: 12px; background: #1a1a3e; border-radius: 8px; }
+    .bar { height: 6px; background: #252550; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #4ecca3, #45b399); transition: width 0.3s; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>🛒 FreshMart — Image Downloader & Saver</h1>
+  <p class="subtitle">Downloads images from AI and saves them directly to your <code>public/images/</code> folder</p>
+  
+  <button onclick="startDownload()" id="startBtn">🔽 Start Download & Save</button>
+
+  <div id="progress" style="display:none;">
+    <span id="progressText">Starting...</span>
+    <div class="bar"><div class="bar-fill" id="barFill" style="width: 0%"></div></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const images = [
+      { name: 'apples.png', prompt: 'fresh shimla apples on clean background 8k photorealistic' },
+      { name: 'oranges.png', prompt: 'vibrant nagpur oranges on clean background 8k photorealistic' },
+      { name: 'mangoes.png', prompt: 'fresh alphonso mangoes on clean background 8k photorealistic' },
+      { name: 'potatoes.png', prompt: 'fresh premium raw potatoes on clean background 8k photorealistic' },
+      { name: 'onions.png', prompt: 'fresh red onions on clean background 8k photorealistic' },
+      { name: 'tomatoes.png', prompt: 'vine ripened red tomatoes on clean background 8k photorealistic' },
+      { name: 'carrots.png', prompt: 'fresh crunchy orange carrots on clean background 8k photorealistic' },
+      { name: 'cabbage.png', prompt: 'fresh green cabbage on clean background 8k photorealistic' },
+      { name: 'cauliflower.png', prompt: 'fresh white cauliflower on clean background 8k photorealistic' },
+      { name: 'capsicum.png', prompt: 'fresh green capsicum bell peppers on clean background 8k photorealistic' },
+      { name: 'garlic.png', prompt: 'fresh garlic bulbs on clean background 8k photorealistic' },
+      { name: 'ginger.png', prompt: 'fresh ginger root on clean background 8k photorealistic' },
+      { name: 'curd.png', prompt: 'smooth white creamy fresh curd yogurt in a bowl photorealistic' },
+      { name: 'butter.png', prompt: 'block of rich yellow creamy butter on premium background' },
+      { name: 'cheese.png', prompt: 'slices of premium soft cheese photorealistic' },
+      { name: 'paneer.png', prompt: 'block of soft fresh white paneer cheese photorealistic' },
+      { name: 'cream.png', prompt: 'bowl of thick fresh dairy cream photorealistic' },
+      { name: 'burgerbuns.png', prompt: 'freshly baked golden burger buns photorealistic' },
+      { name: 'pav.png', prompt: 'soft mumbai pav bread buns photorealistic' },
+      { name: 'biscuits.png', prompt: 'crispy golden butter biscuits cookies photorealistic' },
+      { name: 'cake.png', prompt: 'decadent chocolate cake slice photorealistic' },
+      { name: 'rusks.png', prompt: 'premium golden baked tea rusks photorealistic' },
+      { name: 'mutton.png', prompt: 'tender raw mutton meat cuts photorealistic' },
+      { name: 'fish.png', prompt: 'fresh catch rohu fish photorealistic' },
+      { name: 'prawns.png', prompt: 'fresh tiger prawns seafood photorealistic' },
+      { name: 'crab.png', prompt: 'premium fresh crab seafood photorealistic' },
+      { name: 'atta.png', prompt: 'premium whole wheat atta flour in a bowl photorealistic' },
+      { name: 'dal.png', prompt: 'unpolished toor dal yellow lentils in a bowl photorealistic' },
+      { name: 'sugar.png', prompt: 'bowl of refined white sugar crystals photorealistic' },
+      { name: 'salt.png', prompt: 'bowl of premium iodized salt photorealistic' },
+      { name: 'noodles.png', prompt: 'spicy masala instant noodles photorealistic' },
+      { name: 'mineralwater.png', prompt: 'bottle of purified mineral water photorealistic' },
+      { name: 'coconutwater.png', prompt: 'fresh tender coconut water in a glass with green coconut photorealistic' },
+    ];
+
+    let completed = 0, failed = 0;
+
+    function buildUrl(prompt) {
+      return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&nologo=true`;
+    }
+
+    function updateProgress() {
+      const total = images.length;
+      const pct = Math.round(((completed + failed) / total) * 100);
+      document.getElementById('progressText').innerHTML = 
+        `<span class="done">✅ ${completed} saved</span> &nbsp; <span class="error">❌ ${failed} failed</span> &nbsp; (${completed + failed}/${total})`;
+      document.getElementById('barFill').style.width = pct + '%';
+    }
+
+    async function downloadAndSave(img, container) {
+      const statusEl = container.querySelector('.status');
+      const imgEl = container.querySelector('img');
+      
+      statusEl.textContent = '⏳ Fetching from AI...';
+      statusEl.className = 'status loading';
+
+      try {
+        // Step 1: Download from Pollinations
+        const url = buildUrl(img.prompt);
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blob = await response.blob();
+        
+        if (blob.size < 1000) throw new Error('Image too small');
+        
+        // Show preview
+        imgEl.src = URL.createObjectURL(blob);
+        statusEl.textContent = '💾 Saving to disk...';
+
+        // Step 2: Send to our local server to save
+        const saveResponse = await fetch(`/save-image/${img.name}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: blob
+        });
+        
+        if (!saveResponse.ok) throw new Error('Save failed');
+        const result = await saveResponse.json();
+        
+        completed++;
+        container.className = 'item done';
+        statusEl.textContent = `✅ Saved (${(result.size / 1024).toFixed(0)} KB)`;
+        statusEl.className = 'status done';
+      } catch (err) {
+        failed++;
+        container.className = 'item error';
+        statusEl.textContent = `❌ ${err.message}`;
+        statusEl.className = 'status error';
+      }
+      updateProgress();
+    }
+
+    async function startDownload() {
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('progress').style.display = 'block';
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      completed = 0;
+      failed = 0;
+
+      const containers = images.map(img => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<img src="" alt="${img.name}"><div class="name">${img.name}</div><div class="status">⏳ Queued</div>`;
+        grid.appendChild(div);
+        return { img, container: div };
+      });
+
+      // Download 2 at a time to avoid rate limits
+      for (let i = 0; i < containers.length; i += 2) {
+        const batch = containers.slice(i, i + 2);
+        await Promise.all(batch.map(({ img, container }) => downloadAndSave(img, container)));
+        await new Promise(r => setTimeout(r, 3000)); // 3 sec between batches
+      }
+
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('startBtn').textContent = '🔄 Retry Failed';
+
+      if (failed === 0) {
+        document.getElementById('progressText').innerHTML += '<br>🎉 <strong>All images saved to public/images/ successfully!</strong>';
+      } else {
+        document.getElementById('progressText').innerHTML += `<br>⚠️ ${failed} failed — click "Retry Failed" to try again.`;
+      }
+    }
+  </script>
+</body>
+</html>
