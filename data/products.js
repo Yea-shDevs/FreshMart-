@@ -481,7 +481,7 @@ const products = [
     price: 189,
     unit: "1 liter",
     category: "Pantry",
-    image: "/images/cookingoil.png",
+    image: "/images/cookingoil.png/Users/macos/Desktop/triallab/public/images/cookingoil_1776855476735.png",
     stock: 80,
     badge: null,
   },
