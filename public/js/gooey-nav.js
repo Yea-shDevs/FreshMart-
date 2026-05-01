@@ -96,10 +96,10 @@ const GooeyNav = {
     const cartEl     = document.getElementById('cart-btn');
     if (!this.containerEl || !searchEl || !cartEl) return;
 
-    // Ensure container is a positioning context
-    this.containerEl.style.position = 'relative';
+    // NOTE: header is already position:fixed — that creates a positioning
+    // context for absolute children. Do NOT override it with relative.
 
-    // Create the filter overlay
+    // Create the gooey filter overlay
     this.filterEl = document.createElement('span');
     this.filterEl.className = 'gooey-effect gooey-filter';
     this.containerEl.appendChild(this.filterEl);
