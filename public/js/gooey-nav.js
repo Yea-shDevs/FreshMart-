@@ -92,9 +92,8 @@ const GooeyNav = {
   // ── Boot ──────────────────────────────────
   init() {
     this.containerEl = document.querySelector('.header');
-    const searchEl   = document.getElementById('search-container');
     const cartEl     = document.getElementById('cart-btn');
-    if (!this.containerEl || !searchEl || !cartEl) return;
+    if (!this.containerEl || !cartEl) return;
 
     // NOTE: header is already position:fixed — that creates a positioning
     // context for absolute children. Do NOT override it with relative.
@@ -104,9 +103,8 @@ const GooeyNav = {
     this.filterEl.className = 'gooey-effect gooey-filter';
     this.containerEl.appendChild(this.filterEl);
 
-    // Bind clicks
-    searchEl.addEventListener('click', () => this.trigger(searchEl));
-    cartEl.addEventListener('click',   () => this.trigger(cartEl));
+    // Only cart button triggers the gooey effect
+    cartEl.addEventListener('click', () => this.trigger(cartEl));
 
     // Reposition on resize
     new ResizeObserver(() => {
