@@ -35,6 +35,22 @@ const Products = {
         btn.setAttribute("role", "tab");
         btn.setAttribute("aria-selected", cat === "All");
         btn.addEventListener("click", () => this.selectCategory(cat, btn));
+
+        // Apply glass surface to the button pill itself
+        GlassSurface.apply(btn, {
+          borderRadius:    999,
+          brightness:      45,
+          opacity:         0.88,
+          blur:            5,
+          distortionScale: -100,
+          redOffset:       0,
+          greenOffset:     7,
+          blueOffset:      14,
+          backgroundOpacity: 0.04,
+          saturation:      1.4,
+        });
+
+        // Then wrap with BorderGlow (outer edge-proximity glow)
         const wrappedTab = BorderGlow.wrapTab(btn);
         tabsContainer.appendChild(wrappedTab);
       });

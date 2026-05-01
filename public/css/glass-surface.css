@@ -1,0 +1,117 @@
+/* ─────────────────────────────────────────────
+   GlassSurface — Vanilla CSS Port
+   Based on @react-bits/GlassSurface
+   ───────────────────────────────────────────── */
+
+.glass-surface {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.26s ease-out;
+}
+
+/* Hidden SVG filter that lives inside the element */
+.glass-surface__filter {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  z-index: -1;
+}
+
+/* Text / children wrapper */
+.glass-surface__content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+/* ── SVG filter variant (Chrome / Edge) ─────── */
+.glass-surface--svg {
+  background: hsl(0 0% 100% / var(--glass-frost, 0));
+  backdrop-filter: var(--filter-id, url(#glass-filter)) saturate(var(--glass-saturation, 1));
+  box-shadow:
+    inset 0 0 2px 1px color-mix(in oklch, white, transparent 65%),
+    inset 0 0 10px 4px color-mix(in oklch, white, transparent 85%),
+    0px 4px 16px rgba(17, 17, 26, 0.08),
+    0px 8px 24px rgba(17, 17, 26, 0.06);
+}
+
+/* ── Fallback (Safari / Firefox / no-support) ─ */
+.glass-surface--fallback {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px) saturate(1.6) brightness(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.6) brightness(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 4px 16px rgba(31, 38, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Dark-mode fallback tweak (FreshMart is already dark) */
+@media (prefers-color-scheme: dark) {
+  .glass-surface--fallback {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px) saturate(1.8) brightness(1.15);
+    -webkit-backdrop-filter: blur(12px) saturate(1.8) brightness(1.15);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* No backdrop-filter support */
+@supports not (backdrop-filter: blur(10px)) {
+  .glass-surface--fallback {
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .glass-surface--fallback::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: inherit;
+    z-index: -1;
+  }
+}
+
+/* ── Category-tab specific overrides ────────── */
+
+/* The tab button itself gets the glass treatment */
+.categories__tab.glass-surface {
+  /* Override the default transparent background */
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.categories__tab.glass-surface:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Active tab keeps its green gradient, glass effect just adds depth */
+.categories__tab.glass-surface.categories__tab--active {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.85),
+    rgba(22, 163, 74, 0.85)
+  ) !important;
+  border-color: rgba(74, 222, 128, 0.4) !important;
+  backdrop-filter: blur(8px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.4) !important;
+  box-shadow:
+    0 2px 12px rgba(34, 197, 94, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  color: #fff !important;
+}
