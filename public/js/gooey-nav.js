@@ -5,9 +5,9 @@
 // ─────────────────────────────────────────────
 
 const GooeyNav = {
-  particleCount:     15,
-  particleDistances: [90, 10],
-  particleR:         100,
+  particleCount:     12,
+  particleDistances: [40, 5],   // tighter — keeps particles near the icon
+  particleR:         60,
   animationTime:     600,
   timeVariance:      300,
   colors:            [1, 2, 3, 1, 2, 3, 1, 4],
@@ -87,6 +87,17 @@ const GooeyNav = {
     this.filterEl.classList.remove('active');
     void this.filterEl.offsetWidth;           // force reflow
     this.spawnParticles(this.filterEl);
+
+    // Auto-reset: move filter off-screen after burst fully finishes
+    clearTimeout(this._resetTimer);
+    const clearAfter = this.animationTime * 2 + this.timeVariance + 800;
+    this._resetTimer = setTimeout(() => {
+      this.filterEl.classList.remove('active');
+      this.filterEl.style.left   = '-9999px';
+      this.filterEl.style.top    = '-9999px';
+      this.filterEl.style.width  = '0';
+      this.filterEl.style.height = '0';
+    }, clearAfter);
   },
 
   // ── Boot ──────────────────────────────────
