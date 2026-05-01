@@ -80,19 +80,16 @@ const GooeyNav = {
     });
   },
 
-  // ── Trigger on click ──────────────────────
+  // ── Trigger on click ──────────────────────────
   trigger(targetEl) {
     this.lastTarget = targetEl;
     this.position(targetEl);
-    this.filterEl.classList.remove('active');
-    void this.filterEl.offsetWidth;           // force reflow
     this.spawnParticles(this.filterEl);
 
-    // Auto-reset: move filter off-screen after burst fully finishes
+    // Auto-reset: move filter off-screen after particles finish
     clearTimeout(this._resetTimer);
     const clearAfter = this.animationTime * 2 + this.timeVariance + 800;
     this._resetTimer = setTimeout(() => {
-      this.filterEl.classList.remove('active');
       this.filterEl.style.left   = '-9999px';
       this.filterEl.style.top    = '-9999px';
       this.filterEl.style.width  = '0';
