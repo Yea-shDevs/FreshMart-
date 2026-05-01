@@ -78,8 +78,9 @@ const Products = {
       this.container.style.display = "grid";
 
       products.forEach((product, i) => {
-        const card = this.createCard(product, i);
-        this.container.appendChild(card);
+        const card    = this.createCard(product, i);
+        const wrapped = BorderGlow.wrapNew(card);
+        this.container.appendChild(wrapped);
       });
     } catch (err) {
       console.error("Failed to load products:", err);
