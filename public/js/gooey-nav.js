@@ -98,9 +98,13 @@ const GooeyNav = {
     // NOTE: header is already position:fixed — that creates a positioning
     // context for absolute children. Do NOT override it with relative.
 
-    // Create the gooey filter overlay
+    // Create the gooey filter overlay — parked off-screen until first click
     this.filterEl = document.createElement('span');
     this.filterEl.className = 'gooey-effect gooey-filter';
+    this.filterEl.style.left   = '-9999px';
+    this.filterEl.style.top    = '-9999px';
+    this.filterEl.style.width  = '0';
+    this.filterEl.style.height = '0';
     this.containerEl.appendChild(this.filterEl);
 
     // Only cart button triggers the gooey effect
