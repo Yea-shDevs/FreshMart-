@@ -35,7 +35,8 @@ const Products = {
         btn.setAttribute("role", "tab");
         btn.setAttribute("aria-selected", cat === "All");
         btn.addEventListener("click", () => this.selectCategory(cat, btn));
-        tabsContainer.appendChild(btn);
+        const wrappedTab = BorderGlow.wrapTab(btn);
+        tabsContainer.appendChild(wrappedTab);
       });
     } catch (err) {
       console.error("Failed to load categories:", err);

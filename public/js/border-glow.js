@@ -4,16 +4,28 @@
 // ─────────────────────────────────────────────
 
 const BorderGlow = {
-  // Config — tweak these to match the desired look
+  // Config for product cards
   config: {
     edgeSensitivity: 30,
-    glowColor: '160 80 65',     // green-teal to match FreshMart
+    glowColor: '160 80 65',
     borderRadius: 20,
     glowRadius: 40,
     glowIntensity: 1.0,
     coneSpread: 25,
     fillOpacity: 0.5,
-    colors: ['#34d399', '#a78bfa', '#38bdf8'],  // emerald / violet / sky
+    colors: ['#34d399', '#a78bfa', '#38bdf8'],
+  },
+
+  // Config for category tab pills
+  tabConfig: {
+    edgeSensitivity: 20,
+    glowColor: '160 85 60',
+    borderRadius: 999,
+    glowRadius: 18,
+    glowIntensity: 1.2,
+    coneSpread: 30,
+    fillOpacity: 0.35,
+    colors: ['#34d399', '#818cf8', '#22d3ee'],
   },
 
   // ── Helpers ───────────────────────────────────
@@ -84,16 +96,12 @@ const BorderGlow = {
     }
   },
 
-  // ── Wrap a product card ───────────────────────
+  // ── Shared wrap helper (used by both cards & tabs) ──
 
-  wrapCard(productCard) {
-    const cfg = this.config;
-
-    // Create wrapper
+  _wrap(el, cfg, extraClass = '') {
     const wrapper = document.createElement('div');
-    wrapper.className = 'border-glow-card';
+    wrapper.className = `border-glow-card${extraClass ? ' ' + extraClass : ''}`;
 
-    // Apply static CSS vars
     wrapper.style.setProperty('--card-bg', 'var(--card-bg-color, #1c2030)');
     wrapper.style.setProperty('--edge-sensitivity', cfg.edgeSensitivity);
     wrapper.style.setProperty('--border-radius', `${cfg.borderRadius}px`);
@@ -104,31 +112,23 @@ const BorderGlow = {
     this.applyVars(wrapper, this.buildGlowVars(cfg.glowColor, cfg.glowIntensity));
     this.applyVars(wrapper, this.buildGradientVars(cfg.colors));
 
-    // Edge light span
     const edgeLight = document.createElement('span');
     edgeLight.className = 'edge-light';
     wrapper.appendChild(edgeLight);
 
-    // Inner div
     const inner = document.createElement('div');
     inner.className = 'border-glow-inner';
 
-    // Move product card into inner
-    productCard.parentNode && productCard.parentNode.insertBefore(wrapper, productCard);
-    inner.appendChild(productCard);
+    el.parentNode && el.parentNode.insertBefore(wrapper, el);
+    inner.appendChild(el);
     wrapper.appendChild(inner);
 
-    // Pointer tracking
     wrapper.addEventListener('pointermove', (e) => {
       const rect = wrapper.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-
-      const edge  = this.getEdgeProximity(wrapper, x, y);
-      const angle = this.getCursorAngle(wrapper, x, y);
-
-      wrapper.style.setProperty('--edge-proximity', (edge * 100).toFixed(3));
-      wrapper.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
+      wrapper.style.setProperty('--edge-proximity', (this.getEdgeProximity(wrapper, x, y) * 100).toFixed(3));
+      wrapper.style.setProperty('--cursor-angle', `${this.getCursorAngle(wrapper, x, y).toFixed(3)}deg`);
     });
 
     wrapper.addEventListener('pointerleave', () => {
@@ -138,17 +138,25 @@ const BorderGlow = {
     return wrapper;
   },
 
+  // ── Wrap a product card ───────────────────────
+
+  wrapCard(productCard) {
+    return this._wrap(productCard, this.config);
+  },
+
+  // ── Wrap a category tab pill ──────────────────
+
+  wrapTab(tabEl) {
+    return this._wrap(tabEl, this.tabConfig, 'border-glow-card--tab');
+  },
+
   // ── Init: wrap all existing product cards ─────
 
   init() {
-    document.querySelectorAll('.product-card').forEach(card => {
-      this.wrapCard(card);
-    });
+    document.querySelectorAll('.product-card').forEach(card => this.wrapCard(card));
   },
 
-  // ── Called after new cards are injected ───────
+  // ── Public API ────────────────────────────────
 
-  wrapNew(productCard) {
-    return this.wrapCard(productCard);
-  },
+  wrapNew(productCard) { return this.wrapCard(productCard); },
 };

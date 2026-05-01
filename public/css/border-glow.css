@@ -21,12 +21,19 @@
   overflow: visible;
 }
 
-/* Remove any conflicting border/shadow from the wrapped product-card */
-.border-glow-card .product-card {
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: var(--border-radius) !important;
-  margin: 0;
+/* ── Tab pill variant ─────────────────────── */
+.border-glow-card--tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.border-glow-card--tab .border-glow-inner {
+  overflow: visible;
+}
+
+.border-glow-card--tab .categories__tab {
+  border-radius: 999px !important;
 }
 
 .border-glow-card::before,
