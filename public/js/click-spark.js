@@ -122,15 +122,13 @@ const ClickSpark = {
   },
 };
 
-// Auto-init with site-appropriate settings
-document.addEventListener('DOMContentLoaded', () => {
-  ClickSpark.init({
-    sparkColor:  '#4ade80',   // FreshMart green
-    sparkSize:   12,
-    sparkRadius: 22,
-    sparkCount:  8,
-    duration:    500,
-    easing:      'ease-out',
-    extraScale:  1.2,
-  });
+// Auto-init — script is at the bottom of <body>, DOM is already ready
+ClickSpark.init({
+  sparkColor:  '#4ade80',   // FreshMart green
+  sparkSize:   12,
+  sparkRadius: 22,
+  sparkCount:  8,
+  duration:    500,
+  easing:      'ease-out',
+  extraScale:  1.2,
 });
